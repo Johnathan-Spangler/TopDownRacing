@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /* Johnathan Spangler
- * 11/14/25
+ * 11/18/25
  * Controls the player's Vehicle
  */
 
@@ -16,9 +16,9 @@ public class RacerMovement : MonoBehaviour
 {
     public MovementType movementType = MovementType.Rotate;
 
-    public float maxSpeed = 8f, acceleration = 6f, brakeSmoothTime = 0.35f, turnSpeedDegreesPerSecond = 240f, rotateInputTurnRate = 180f;
+    public float maxSpeed, acceleration, brakeSmoothTime, turnSpeedDegreesPerSecond, rotateInputTurnRate;
 
-    public bool moveAlongLocalForward = true, preserveVerticalVelocity = true, braking;
+    public bool moveAlongLocalForward = true, preserveVerticalVelocity = true, braking, stopped;
 
     Rigidbody rb;
 
@@ -44,14 +44,22 @@ public class RacerMovement : MonoBehaviour
         if (!braking)
         {
             currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.deltaTime);
+            stopped = false;
         }
         else
         {
             currentSpeed = Mathf.SmoothDamp(currentSpeed, 0f, ref speedVelocityRef, brakeSmoothTime);
-            if (Mathf.Abs(currentSpeed) < 0.01f) currentSpeed = 0f;
+            if (Mathf.Abs(currentSpeed) < 0.01f)
+            {
+                currentSpeed = 0f;
+            }
+            if (Mathf.Abs(currentSpeed) < 1f)
+            {
+                stopped = true;
+            }
         }
 
-        if (!braking)
+        if (!stopped)
         {
             if (movementType == MovementType.Rotate)
                 HandleRotateMode();
