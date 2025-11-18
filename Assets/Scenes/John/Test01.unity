@@ -263,12 +263,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementType: 1
-  maxSpeed: 8
-  acceleration: 6
-  brakeSmoothTime: 0.35
+  maxSpeed: 20
+  acceleration: 15
+  brakeSmoothTime: 0.5
   turnSpeedDegreesPerSecond: 240
   rotateInputTurnRate: 180
-  invertYForward: 0
+  moveAlongLocalForward: 1
+  preserveVerticalVelocity: 1
+  braking: 0
+  stopped: 0
 --- !u!65 &702020698
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -468,7 +471,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 863645672}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 21.87, y: 28.24, z: -0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
