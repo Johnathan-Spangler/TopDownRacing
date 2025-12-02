@@ -37,7 +37,7 @@ public class RaceLogic : MonoBehaviour
 
         if (other.tag == "End")
         {
-            lapped;
+            lapped = true;
         }
     }
 }
