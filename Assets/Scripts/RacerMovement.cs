@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 //using UnityEngine.InputSystem;
@@ -62,7 +63,18 @@ public class RacerMovement : MonoBehaviour
             braking = false;
         }
 
-        float targetSpeed = braking ? 0f : maxSpeed;
+        float slowSpeed = maxSpeed;
+        Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
+        foreach (var h in hits)
+        {
+            if ((h.gameObject.name != "Nose" || h.gameObject.name != "Car") || (h.gameObject.name != "Finish" || h.gameObject.name != "Start")) //MAKE TRIPPLE RAYCAST INSTEAD!!!!!!!!!!!!!!!!!!!!!!!!
+            {
+                slowSpeed = maxSpeed * 0.5f;
+                Debug.Log("Hit: " + h.gameObject.name);
+            }
+        }
+
+        float targetSpeed = braking ? 0f : slowSpeed;
 
         if (!braking)
         {

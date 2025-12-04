@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 8940139400897388179}
   - component: {fileID: 7654156284633491689}
   m_Layer: 0
-  m_Name: Nose (purely visual)
+  m_Name: Nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
