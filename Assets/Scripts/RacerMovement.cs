@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 //using UnityEngine.InputSystem;
 
 /* Johnathan Spangler
- * 11/18/25
+ * 12/09/25
  * Controls the player's Vehicle
  */
 
@@ -28,6 +28,8 @@ public class RacerMovement : MonoBehaviour
     public float currentSpeed = 0f, speedVelocityRef = 0f, currentYaw;
 
     public ControllerImplementation inputActions;
+
+    public GameObject ray1, ray2, ray3;
 
     void Awake()
     {
@@ -64,15 +66,43 @@ public class RacerMovement : MonoBehaviour
         }
 
         float slowSpeed = maxSpeed;
-        Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
-        foreach (var h in hits)
+
+        /*RaycastHit hit;
+        Ray front_ray = new Ray(transform.position);
+        Ray left_ray;
+        Ray right_ray;
+
+
+        if (Physics.Raycast(front_ray, out hit))
         {
-            if ((h.gameObject.name != "Nose" || h.gameObject.name != "Car") || (h.gameObject.name != "Finish" || h.gameObject.name != "Start")) //MAKE TRIPPLE RAYCAST INSTEAD!!!!!!!!!!!!!!!!!!!!!!!!
-            {
-                slowSpeed = maxSpeed * 0.5f;
-                Debug.Log("Hit: " + h.gameObject.name);
-            }
+            ray1.transform.position = hit.point;
+            slowSpeed = maxSpeed * 0.5f;
+            //Debug.Log("Hit: ");
         }
+        else
+        {
+            ray1.transform.position = new Vector3(0, -2, 0);
+        }
+        if (Physics.Raycast(front_ray, out hit))
+        {
+            ray1.transform.position = hit.point;
+            slowSpeed = maxSpeed * 0.5f;
+            //Debug.Log("Hit: ");
+        }
+        else
+        {
+            ray1.transform.position = new Vector3(0, -2, 0);
+        }
+        if (Physics.Raycast(front_ray, out hit))
+        {
+            ray1.transform.position = hit.point;
+            slowSpeed = maxSpeed * 0.5f;
+            //Debug.Log("Hit: ");
+        }
+        else
+        {
+            ray1.transform.position = new Vector3(0, -2, 0);
+        }*/
 
         float targetSpeed = braking ? 0f : slowSpeed;
 

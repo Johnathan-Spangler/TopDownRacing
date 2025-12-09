@@ -4456,7 +4456,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< Updated upstream
   m_GameObject: {fileID: 710523947}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
@@ -4468,26 +4467,6 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &710523949
 MeshCollider:
-=======
-  m_GameObject: {fileID: 702020696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75057e1eb3744d64ba77df1b87350730, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementType: 1
-  maxSpeed: 100
-  acceleration: 70
-  brakeSmoothTime: 0.35
-  turnSpeedDegreesPerSecond: 240
-  rotateInputTurnRate: 180
-  moveAlongLocalForward: 1
-  preserveVerticalVelocity: 1
-  braking: 0
-  stopped: 0
---- !u!65 &702020698
-BoxCollider:
->>>>>>> Stashed changes
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}

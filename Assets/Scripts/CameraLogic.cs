@@ -4,6 +4,11 @@ using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 using TMPro;
 
+/* Johnathan Spangler
+ * 12/09/25
+ * Controls the player's camera
+ */
+
 public class CameraLogic : MonoBehaviour
 {
     public Transform car;

@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
+/* Johnathan Spangler
+ * 12/09/25
+ * Controls the logic of the timer and lap number
+ */
+
 public class RaceLogic : MonoBehaviour
 {
-    public float lapNumber, displayValue;
-    private float lapMins, lapSecs, timer;
+    public float lapNumber;
+    public float lapMins, lapSecs;
+    private float timer;
     public bool lapped;
 
     public GameObject startObject;
@@ -34,7 +40,6 @@ public class RaceLogic : MonoBehaviour
                 lapMins++;
                 lapSecs = 0;
             }
-            displayValue = lapMins + lapSecs / 100f;
         }
     }
 
