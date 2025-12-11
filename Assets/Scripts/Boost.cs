@@ -14,7 +14,7 @@ public class Boost : MonoBehaviour
         if (racer != null)
         {
             racer.currentSpeed = Mathf.Max(0f, racer.currentSpeed + speedBoost);
-            Debug.Log("panel hit! Speed increased!");
+            //Debug.Log("panel hit! Speed increased!");
         }
     }
 }

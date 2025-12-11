@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-//using UnityEngine.InputSystem;
 
 /* Johnathan Spangler
  * 12/09/25
@@ -17,9 +16,7 @@ public enum MovementType
 
 public class RacerMovement : MonoBehaviour
 {
-    public MovementType movementType = MovementType.Rotate;
-
-    public float maxSpeed, acceleration, brakeSmoothTime, turnSpeedDegreesPerSecond, rotateInputTurnRate;
+    public float maxSpeed, acceleration, brakeSmoothTime, rotateInputTurnRate;
 
     public bool moveAlongLocalForward = true, preserveVerticalVelocity = true, braking, stopped;
 
@@ -29,10 +26,19 @@ public class RacerMovement : MonoBehaviour
 
     public ControllerImplementation inputActions;
 
-    public GameObject ray1, ray2, ray3;
+    public bool brakeLocked = true;
+
+    void Start()
+    {
+        brakeLocked = true;
+        braking = true;
+        stopped = true;
+        currentSpeed = 0f;
+    }
 
     void Awake()
     {
+        //Set rigidbody and input
         rb = GetComponent<Rigidbody>();
         if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
         if (!TryGetComponent<BoxCollider>(out _)) gameObject.AddComponent<BoxCollider>();
@@ -42,8 +48,11 @@ public class RacerMovement : MonoBehaviour
         currentYaw = transform.eulerAngles.y;
 
         inputActions = new ControllerImplementation();
+
+        if (inputActions == null) inputActions = new ControllerImplementation();
     }
 
+    //Redundancy to ensure inputs are recieved
     void OnEnable()
     {
         inputActions.Enable();
@@ -56,55 +65,29 @@ public class RacerMovement : MonoBehaviour
 
     void Update()
     {
-        if (inputActions.Controller.Brake.WasPressedThisFrame())
+        //Handle braking logic
+        bool brakePressed = false;
+
+        if (inputActions != null)
+        { 
+            brakePressed = inputActions.Controller.Brake.IsPressed();
+        }
+
+        if (brakeLocked)
         {
             braking = true;
         }
-        else if (inputActions.Controller.Brake.WasReleasedThisFrame())
-        {
-            braking = false;
-        }
-
-        float slowSpeed = maxSpeed;
-
-        /*RaycastHit hit;
-        Ray front_ray = new Ray(transform.position);
-        Ray left_ray;
-        Ray right_ray;
-
-
-        if (Physics.Raycast(front_ray, out hit))
-        {
-            ray1.transform.position = hit.point;
-            slowSpeed = maxSpeed * 0.5f;
-            //Debug.Log("Hit: ");
-        }
         else
         {
-            ray1.transform.position = new Vector3(0, -2, 0);
+            braking = brakePressed;
         }
-        if (Physics.Raycast(front_ray, out hit))
-        {
-            ray1.transform.position = hit.point;
-            slowSpeed = maxSpeed * 0.5f;
-            //Debug.Log("Hit: ");
-        }
-        else
-        {
-            ray1.transform.position = new Vector3(0, -2, 0);
-        }
-        if (Physics.Raycast(front_ray, out hit))
-        {
-            ray1.transform.position = hit.point;
-            slowSpeed = maxSpeed * 0.5f;
-            //Debug.Log("Hit: ");
-        }
-        else
-        {
-            ray1.transform.position = new Vector3(0, -2, 0);
-        }*/
 
-        float targetSpeed = braking ? 0f : slowSpeed;
+        if (brakeLocked && brakePressed)
+        {
+            SetBrakeLock(false);
+        }
+
+        float targetSpeed = braking ? 0f : maxSpeed;
 
         if (!braking)
         {
@@ -113,27 +96,41 @@ public class RacerMovement : MonoBehaviour
         }
         else
         {
-            currentSpeed = Mathf.SmoothDamp(currentSpeed, 0f, ref speedVelocityRef, brakeSmoothTime);
-            if (Mathf.Abs(currentSpeed) < 0.01f)
-            {
-                currentSpeed = 0f;
-            }
-            if (Mathf.Abs(currentSpeed) < 1f)
-            {
-                stopped = true;
-            }
+            currentSpeed = Mathf.SmoothDamp(currentSpeed, 0f, ref speedVelocityRef, Mathf.Max(0.01f, brakeSmoothTime));
+            if (Mathf.Abs(currentSpeed) < 0.01f) currentSpeed = 0f;
+            stopped = Mathf.Abs(currentSpeed) < 0.05f;
         }
 
         if (!stopped)
         {
-            if (movementType == MovementType.Rotate)
-                HandleRotateMode();
-            else
-                HandleFreeMode();
+            HandleRotateMode();
         }
+
         transform.rotation = Quaternion.Euler(0f, currentYaw, 0f);
     }
 
+    /// <summary>
+    /// Enable braking when a level starts (Called in UI Manager)
+    /// </summary>
+    /// <param name="locked"></param>
+    public void SetBrakeLock(bool locked)
+    {
+        brakeLocked = locked;
+        if (locked)
+        {
+            braking = true;
+            currentSpeed = 0f;
+            stopped = true;
+            if (rb != null && preserveVerticalVelocity)
+                rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+            else if (rb != null)
+                rb.velocity = Vector3.zero;
+        }
+    }
+
+    /// <summary>
+    /// Constantly move forward
+    /// </summary>
     void FixedUpdate()
     {
         Vector3 forward = moveAlongLocalForward ? transform.forward : Vector3.forward;
@@ -148,6 +145,9 @@ public class RacerMovement : MonoBehaviour
             rb.velocity = horizontalVelocity;
     }
 
+    /// <summary>
+    /// Handles the player turning controls
+    /// </summary>
     void HandleRotateMode()
     {
         float h = 0f;
@@ -158,35 +158,20 @@ public class RacerMovement : MonoBehaviour
         currentYaw += turnAmount;
     }
 
-    void HandleFreeMode()
+    /// <summary>
+    /// Reset player to default settings
+    /// </summary>
+    public void ResetRotationImmediate()
     {
-        Vector2 input = Vector2.zero;
-        if (inputActions.Controller.Up.IsPressed()) input.y += 1f;
-        if (inputActions.Controller.Down.IsPressed()) input.y -= 1f;
-        if (inputActions.Controller.Right.IsPressed()) input.x += 1f;
-        if (inputActions.Controller.Left.IsPressed()) input.x -= 1f;
-
-        if (input.sqrMagnitude > 0.0001f)
+        currentYaw = 0f;
+        transform.rotation = Quaternion.Euler(0f, currentYaw, 0f);
+        if (rb != null)
         {
-            Vector3 desired = new Vector3(input.x, 0f, input.y).normalized;
-            float desiredYaw = Mathf.Atan2(desired.x, desired.z) * Mathf.Rad2Deg;
-            currentYaw = Mathf.MoveTowardsAngle(currentYaw, desiredYaw, turnSpeedDegreesPerSecond * Time.deltaTime);
+            rb.angularVelocity = Vector3.zero;
+            rb.MoveRotation(Quaternion.Euler(0f, currentYaw, 0f));
         }
+        currentSpeed = 0f;
+        stopped = true;
+        brakeLocked = true;
     }
-
-    /*
-     * Use either of these later if desired to control via code
-    public void ToggleMovementMode()
-    {
-        movementType = movementType == MovementType.Rotate ? MovementType.Free : MovementType.Rotate;
-    }
-
-    public void SetMovementMode(MovementType mode)
-    {
-        movementType = mode;
-    }*/
-
-
-    ///If using boost, negate speed decrease when in dirt
-    ///when in dirt, decrease speed unless speed boosted
 }

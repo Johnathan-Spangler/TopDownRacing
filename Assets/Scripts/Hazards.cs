@@ -18,7 +18,7 @@ public class Hazards : MonoBehaviour
         if (racer != null)
         {
             racer.currentSpeed = Mathf.Max(0f, racer.currentSpeed - penalty);
-            Debug.Log("Hazard hit! Speed reduced.");
+            //Debug.Log("Hazard hit! Speed reduced.");
         }
     }
 

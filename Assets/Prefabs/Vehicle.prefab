@@ -106,7 +106,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   car: {fileID: 4371942969228649971}
-  AiControl: {fileID: 5329513640986625797}
   rotationSmoothTime: 0.2
   rotationSmooth: 5
   velocity: {x: 0, y: 0, z: 0}
@@ -159,7 +158,7 @@ GameObject:
   - component: {fileID: 1826306662413973649}
   - component: {fileID: 3305182544428998675}
   - component: {fileID: 4203785171062560612}
-  - component: {fileID: 5329513640986625797}
+  - component: {fileID: 5296924624202324360}
   m_Layer: 0
   m_Name: Car
   m_TagString: Vehicle
@@ -306,6 +305,7 @@ MonoBehaviour:
   currentSpeed: 0
   speedVelocityRef: 0
   currentYaw: 0
+  brakeLocked: 1
 --- !u!114 &4203785171062560612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,10 +319,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lapNumber: 0
-  displayValue: 0
+  lapMins: 0
+  lapSecs: 0
   lapped: 0
   startObject: {fileID: 0}
---- !u!114 &5329513640986625797
+--- !u!114 &5296924624202324360
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -331,10 +332,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 5820232573049990102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81e13e3e5895161459fa9e659981d367, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e3742f989bfaa84c9361703a4913ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: 1
+  UI: {fileID: 0}
+  menu: {fileID: 0}
+  lvl1Info: {fileID: 0}
+  lvl2Info: {fileID: 0}
+  lvl3Info: {fileID: 0}
+  template1: 
+  template2: 
+  template3: 
+  template4: 
+  tempSecs: 
+  lastUp1: 
+  lastUp2: 
+  lvl1Time: 
+  lvl1Best: 
+  lvl2Time: 
+  lvl2Best: 
+  lvl3Time: 
+  lvl3Best: 
+  lvl1: 0
+  lvl2: 0
+  lvl3: 0
+  raceLogic: {fileID: 4203785171062560612}
+  racerMovement: {fileID: 0}
 --- !u!1 &7872643409268792305
 GameObject:
   m_ObjectHideFlags: 0
